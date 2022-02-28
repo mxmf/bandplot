@@ -339,4 +339,5 @@ if __name__ == '__main__':
     kpoints = ReadKpoints('KPOINTS')
     plot = PlotBand(file='vasprun.xml', divisions=kpoints.division,
                     symbols=kpoints.symbols, args=args, fig=fig, ax=ax)
+    plt.savefig('band.png')
     plt.show()
