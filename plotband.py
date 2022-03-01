@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from matplotlib import cm
-import matplotlib
+import matplotlib as mpl
 from matplotlib.colors import ListedColormap
 from readfile import ReadVasprun
 from readfile import ReadKpoints
@@ -9,8 +9,7 @@ import matplotlib.pyplot as plt
 from getarg import get_args
 from matplotlib.collections import LineCollection
 from pathlib import Path
-from matplotlib.ticker import AutoMinorLocator,MultipleLocator
-
+from matplotlib.ticker import AutoMinorLocator, MultipleLocator
 
 
 class PlotBand(ReadVasprun):
@@ -28,11 +27,11 @@ class PlotBand(ReadVasprun):
             self.plot_proband(ax, fig)
         else:
             self.plot_band(ax, fig)
-    
+
     @property
     def fermi(self):
         if self.args.fermi:
-            try: 
+            try:
                 return np.float64(self.args.fermi)
             except:
                 return ReadVasprun(self.args.fermi).fermi
@@ -73,7 +72,7 @@ class PlotBand(ReadVasprun):
                 f.write("\n")
 
     def get_prolist(self):
-        if self.args.atoms ==None and self.args.orbitals == None:
+        if self.args.atoms == None and self.args.orbitals == None:
             return None
         else:
             total_orbitals = ['s', 'py', 'pz', 'px', 'dxy', 'dyz', 'dz2', 'dxz',
@@ -184,20 +183,22 @@ class PlotBand(ReadVasprun):
         ax.set_xlim(xlist[0], xlist[-1])
         for i in range(self.nbands):
             try:
-                ax.plot(xlist, ylist[0, :, i], color=self.args.color[0], zorder=1)
+                ax.plot(xlist, ylist[0, :, i],
+                        color=self.args.color[0], zorder=1)
             except:
                 ax.plot(xlist, ylist[0, :, i], color='red', zorder=1)
         try:
             for i in range(self.nbands):
                 try:
-                    ax.plot(xlist, ylist[1, :, i], color=self.args.color[1], zorder=1)
+                    ax.plot(xlist, ylist[1, :, i],
+                            color=self.args.color[1], zorder=1)
                 except:
                     ax.plot(xlist, ylist[1, :, i], color='blue', zorder=1)
         except:
             pass
         self.get_gap()
         ax.axhline(y=0, linestyle='--', color='black',
-                   linewidth=3, zorder=0)
+                   linewidth=mpl.rcParams['ytick.major.width'], zorder=0)
 
         if self.divisions is None or self.divisions == len(self.kpoints):
             xticks = [0]
@@ -210,7 +211,7 @@ class PlotBand(ReadVasprun):
                               1 for x in range(len(xlist)//self.divisions)]
             xticks = [xlist[i] for i in xtickindex]
         for xtick in xticks:
-            ax.axvline(x=xtick, linestyle='-', linewidth=3,
+            ax.axvline(x=xtick, linestyle='-', linewidth=mpl.rcParams['xtick.major.width'],
                        color='lightgrey', zorder=0)
         ax.set_xticks(xticks)
         if self.ksymbols == []:
@@ -247,7 +248,7 @@ class PlotBand(ReadVasprun):
         ylist = self.eigen[0, self.use_index, :, :] - self.fermi
         xlist2 = np.tile(xlist.repeat(2)[1:-1], self.nbands)
         ylist2 = ylist.repeat(2, axis=0)[1:-1, :].reshape(-1, order="F")
-        
+
         if self.args.s:
             totalprolist = self.project[3,
                                         self.use_index, :, :, :][1:, :, :, :]
@@ -257,7 +258,7 @@ class PlotBand(ReadVasprun):
                 .sum(axis=2)
                 .reshape(-1, order="F")
             )
-            norm = matplotlib.colors.Normalize(proarray.min(), proarray.max())
+            norm = mpl.colors.Normalize(proarray.min(), proarray.max())
         else:
             totalprolist = self.project[0,
                                         self.use_index, :, :, :][1:, :, :, :]
@@ -267,7 +268,7 @@ class PlotBand(ReadVasprun):
                 .sum(axis=2)
                 .reshape(-1, order="F")
             )
-            norm = matplotlib.colors.Normalize(0, proarray.max())
+            norm = mpl.colors.Normalize(0, proarray.max())
         if ax is None:
             fig, ax = plt.subplots()
         ax.set_ylabel("Energy(ev)")
@@ -294,7 +295,8 @@ class PlotBand(ReadVasprun):
                     0, np.max(proarray), 5))
                 cbar.ax.set_yticklabels(np.around(
                     np.linspace(0, np.max(proarray), 5), 2))
-        ax.axhline(y=0, linestyle="--", color="black", linewidth=3, zorder=0)
+        ax.axhline(y=0, linestyle="--", color="black",
+                   linewidth=mpl.rcParams['ytick.major.width'], zorder=0)
 
         if self.divisions is None or self.divisions == len(self.kpoints):
             xticks = [0]
@@ -307,7 +309,7 @@ class PlotBand(ReadVasprun):
                               1 for x in range(len(xlist)//self.divisions)]
             xticks = [xlist[i] for i in xtickindex]
         for xtick in xticks:
-            ax.axvline(x=xtick, linestyle='-', linewidth=3,
+            ax.axvline(x=xtick, linestyle='-', linewidth=mpl.rcParams['xtick.major.width'],
                        color='lightgrey', zorder=0)
         ax.set_xticks(xticks)
         if self.ksymbols == []:
@@ -333,7 +335,7 @@ class PlotBand(ReadVasprun):
 
 if __name__ == '__main__':
     cur_file_path = Path(__file__).resolve().parent
-    matplotlib.rc_file('{}/matplotlibrc'.format(cur_file_path))
+    mpl.rc_file('{}/matplotlibrc'.format(cur_file_path))
     fig, ax = plt.subplots()
     args = get_args()
     kpoints = ReadKpoints('KPOINTS')
