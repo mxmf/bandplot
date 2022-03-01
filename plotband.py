@@ -335,7 +335,10 @@ class PlotBand(ReadVasprun):
 
 if __name__ == '__main__':
     cur_file_path = Path(__file__).resolve().parent
-    mpl.rc_file('{}/matplotlibrc'.format(cur_file_path))
+    try:
+        mpl.rc_file('{}/matplotlibrc'.format(cur_file_path))
+    except:
+        pass
     fig, ax = plt.subplots()
     args = get_args()
     kpoints = ReadKpoints('KPOINTS')
