@@ -327,7 +327,6 @@ class PlotBand(ReadVasprun):
                     (self.ksymbols+self.ksymbols)[0:len(xticks)])
         if self.args.xr:
             ax.set_xlim(xticks[self.args.xr[0]], xticks[self.args.xr[1]])
-        ax.yaxis.set_minor_locator(MultipleLocator(0.5))
         ax.tick_params(bottom=False)
         self.linecollection = lc
         ax.yaxis.set_minor_locator(AutoMinorLocator(2))
