@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from getarg import get_args
 from matplotlib.collections import LineCollection
 from pathlib import Path
-from matplotlib.ticker import AutoMinorLocator, MultipleLocator
+from matplotlib.ticker import AutoMinorLocator, AutoLocator
 
 
 class PlotBand(ReadVasprun):
@@ -229,7 +229,7 @@ class PlotBand(ReadVasprun):
                     (self.ksymbols+self.ksymbols)[0:len(xticks)])
         if self.args.xr:
             ax.set_xlim(xticks[self.args.xr[0]], xticks[self.args.xr[1]])
-
+        ax.yaxis.set_major_locator(AutoLocator())
         ax.yaxis.set_minor_locator(AutoMinorLocator(2))
         ax.tick_params(bottom=False)
         return xlist, ylist
@@ -329,8 +329,8 @@ class PlotBand(ReadVasprun):
             ax.set_xlim(xticks[self.args.xr[0]], xticks[self.args.xr[1]])
         ax.tick_params(bottom=False)
         self.linecollection = lc
+        ax.yaxis.set_major_locator(AutoLocator())
         ax.yaxis.set_minor_locator(AutoMinorLocator(2))
-        ax.tick_params(bottom=False)
         return lc
 
 
