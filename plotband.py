@@ -330,6 +330,8 @@ class PlotBand(ReadVasprun):
         ax.yaxis.set_minor_locator(MultipleLocator(0.5))
         ax.tick_params(bottom=False)
         self.linecollection = lc
+        ax.yaxis.set_minor_locator(AutoMinorLocator(2))
+        ax.tick_params(bottom=False)
         return lc
 
 
